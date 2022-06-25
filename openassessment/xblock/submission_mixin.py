@@ -993,7 +993,7 @@ class SubmissionMixin:
             try:
                 from xmodule.gamification import share_gamification_user_points
                 gamification_resp = share_gamification_user_points(self, check_eligibility=False)
-                log.error("GAMIFICATION_RESPONSE:", gamification_resp)
+                logger.error("GAMIFICATION_RESPONSE:", gamification_resp)
                 is_point_submitted = gamification_resp.get("points_submitted")
                 if is_point_submitted:
                     context["gamification_point_submitted"] = is_point_submitted
