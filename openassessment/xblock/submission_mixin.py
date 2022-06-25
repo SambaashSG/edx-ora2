@@ -999,7 +999,7 @@ class SubmissionMixin:
                     context["gamification_point_submitted"] = is_point_submitted
                     context["gamification_point_html"] = gamification_resp.get("popup_html")
             except Exception as e:
-                log.error(f"GAMIFICATION ERROR: {e}")
+                logger.error(f"GAMIFICATION ERROR: {e}")
             path = 'openassessmentblock/response/oa_response_submitted.html'
 
         return path, context
