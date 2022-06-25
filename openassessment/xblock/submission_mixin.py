@@ -990,7 +990,6 @@ class SubmissionMixin:
             context["self_incomplete"] = self_in_workflow and not workflow["status_details"]["self"]["complete"]
             context["student_submission"] = create_submission_dict(student_submission, self.prompts)
             logger.error("RESPONSE STARTED WORKING THANKS")
-            import ipdb; ipdb.set_trace()
             from django.contrib.auth.models import User
             from common.djangoapps.student.models import CourseEnrollment
             logger.error("#####################################")
