@@ -499,6 +499,7 @@ export class ResponseView {
       // Keep this on one big line to avoid gettext bug: http://stackoverflow.com/a/24579117
       // eslint-disable-next-line max-len
       const msg = gettext('You\'re about to submit your response for this assignment. After you submit this response, you can\'t change it or submit a new response.');
+      debugger;
       this.confirmationDialog.confirm(
         title,
         msg,
@@ -513,7 +514,7 @@ export class ResponseView {
     submit() {
       const submission = this.response();
       this.baseView.toggleActionError('response', null);
-
+      debugger;
       // Send the submission to the server
       this.server.submit(submission)
         .done(() => { this.moveToNextStep(); })

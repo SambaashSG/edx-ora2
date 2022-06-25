@@ -192,6 +192,7 @@ export class Server {
    * and error message otherwise.
    */
   submit(submission) {
+    debugger;
     const url = this.url('submit');
     return $.Deferred((defer) => {
       $.ajax({
@@ -200,6 +201,7 @@ export class Server {
         data: JSON.stringify({ submission }),
         contentType: jsonContentType,
       }).done(function (data) {
+        debugger;
         console.log("CONFIRM DATA:", data);
         const success = data[0];
         if (success) {
