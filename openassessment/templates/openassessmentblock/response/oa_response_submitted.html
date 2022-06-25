@@ -60,6 +60,6 @@
     </div>
 </div>
     {% if gamification_point_submitted %}
-        {{gamification_point_html}}
+        {{gamification_point_html|safe}}
     {% endif %}
 {% endblock %}
