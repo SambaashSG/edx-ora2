@@ -200,6 +200,7 @@ export class Server {
         data: JSON.stringify({ submission }),
         contentType: jsonContentType,
       }).done(function (data) {
+        console.log("CONFIRM DATA:", data);
         const success = data[0];
         if (success) {
           const studentId = data[1];
