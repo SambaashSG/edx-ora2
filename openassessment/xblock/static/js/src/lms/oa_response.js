@@ -499,15 +499,11 @@ export class ResponseView {
       // Keep this on one big line to avoid gettext bug: http://stackoverflow.com/a/24579117
       // eslint-disable-next-line max-len
       const msg = gettext('You\'re about to submit your response for this assignment. After you submit this response, you can\'t change it or submit a new response.');
-      console.log("Start To work on popup");
       this.confirmationDialog.confirm(
         title,
         msg,
         () => view.submit(),
         () => view.submitEnabled(true),
-        () => {
-          console.log("COMPLETE MY FUNCTION");
-        }
       );
     }
 

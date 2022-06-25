@@ -989,6 +989,7 @@ class SubmissionMixin:
             context["peer_incomplete"] = peer_in_workflow and not workflow["status_details"]["peer"]["complete"]
             context["self_incomplete"] = self_in_workflow and not workflow["status_details"]["self"]["complete"]
             context["student_submission"] = create_submission_dict(student_submission, self.prompts)
+            logger.error("RESPONSE STARTED WORKING THANKS")
             path = 'openassessmentblock/response/oa_response_submitted.html'
 
         return path, context
