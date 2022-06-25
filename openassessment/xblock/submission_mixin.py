@@ -989,36 +989,17 @@ class SubmissionMixin:
             context["peer_incomplete"] = peer_in_workflow and not workflow["status_details"]["peer"]["complete"]
             context["self_incomplete"] = self_in_workflow and not workflow["status_details"]["self"]["complete"]
             context["student_submission"] = create_submission_dict(student_submission, self.prompts)
-            logger.error("RESPONSE STARTED WORKING THANKS")
-            from django.contrib.auth.models import User
-            from common.djangoapps.student.models import CourseEnrollment
-            logger.error("#####################################")
-            logger.error(self)
-            logger.error(self.scope_ids.user_id)
-            user = User.objects.get(id=self.scope_ids.user_id)
-            logger.error(user)
-            logger.error(self.course_id)
-            enrollment_obj = CourseEnrollment.get_enrollment(user, self.course_id)
-            logger.error(enrollment_obj)
-            vertical = self.get_parent()
-            logger.error(vertical)
-            units = vertical.get_parent().get_children()
-            logger.error(units)
-            units_location = [str(item.location) for item in units]
-            logger.error(units_location)
-            vertical_index = units_location.index(str(vertical.location))
-            logger.error(vertical_index)
-            prev_next_contents = [units_location[vertical_index - 1],
-                                  units_location[(vertical_index + 1) % len(units_location)]]
-            logger.error("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
-            logger.error(prev_next_contents)
-            # try:
-            #     from xmodule.gamification import share_gamification_user_points
-            #     gamification_resp = share_gamification_user_points(self, check_eligibility=False)
-            #     student_state.update(gamification_resp)
-            #     log.error("GAMIFICATION_RESPONSE:", gamification_resp)
-            # except Exception as e:
-            #     log.error(f"GAMIFICATION ERROR: {e}")
+            logger.error("GAMIFICATION POINT ACTION")
+            try:
+                from xmodule.gamification import share_gamification_user_points
+                gamification_resp = share_gamification_user_points(self, check_eligibility=False)
+                log.error("GAMIFICATION_RESPONSE:", gamification_resp)
+                is_point_submitted = gamification_resp.get("points_submitted")
+                if is_point_submitted:
+                    context["gamification_point_submitted"] = is_point_submitted
+                    context["gamification_point_html"] = gamification_resp.get("popup_html")
+            except Exception as e:
+                log.error(f"GAMIFICATION ERROR: {e}")
             path = 'openassessmentblock/response/oa_response_submitted.html'
 
         return path, context

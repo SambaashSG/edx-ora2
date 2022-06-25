@@ -23,7 +23,6 @@
 {% endblock %}
 
 {% block body %}
-    Response SUBMITTED
 <div class="ui-slidable__content" aria-labelledby="oa_response_{{ xblock_id }}" id="oa_response_{{ xblock_id }}_content">
     <div class="wrapper--step__content">
 
@@ -60,4 +59,7 @@
         </div>
     </div>
 </div>
+    {% if gamification_point_submitted %}
+        {{gamification_point_html}}
+    {% endif %}
 {% endblock %}
