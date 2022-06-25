@@ -998,9 +998,9 @@ class SubmissionMixin:
             user = User.objects.get(id=self.scope_ids.user_id)
             logger.error(user)
             logger.error(self.course_id)
-            enrollment_obj = CourseEnrollment.get_enrollment(user, problem_block_cls.course_id)
+            enrollment_obj = CourseEnrollment.get_enrollment(user, self.course_id)
             logger.error(enrollment_obj)
-            vertical = problem_block_cls.get_parent()
+            vertical = self.get_parent()
             logger.error(vertical)
             units = vertical.get_parent().get_children()
             logger.error(units)
@@ -1010,6 +1010,7 @@ class SubmissionMixin:
             logger.error(vertical_index)
             prev_next_contents = [units_location[vertical_index - 1],
                                   units_location[(vertical_index + 1) % len(units_location)]]
+            logger.error("$$$$$$$$$$$$$$$$$$$$$$$$$$$$")
             logger.error(prev_next_contents)
             # try:
             #     from xmodule.gamification import share_gamification_user_points
