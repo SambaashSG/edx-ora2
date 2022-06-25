@@ -60,6 +60,9 @@
     </div>
 </div>
     {% if gamification_point_submitted %}
-        {{gamification_point_html|safe}}
+        <script>
+            let popup_html = {{gamification_point_html|safe}};
+            $("body").append(popup_html);
+        </script>
     {% endif %}
 {% endblock %}
