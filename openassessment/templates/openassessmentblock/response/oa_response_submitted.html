@@ -61,7 +61,7 @@
 </div>
     {% if gamification_point_submitted %}
         <script>
-            let popup_html = {{gamification_point_html|safe}};
+            let popup_html = "{{gamification_point_html}}";
             $("body").append(popup_html);
         </script>
     {% endif %}
