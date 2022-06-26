@@ -62,7 +62,7 @@
     {% if gamification_point_submitted %}
         <script>
             let popup_html = "{{gamification_point_html|safe}}";
-            console.log("POINTS SUBMITTED:", gamification_point_submitted);
+            console.log("POINTS SUBMITTED:", {{gamification_point_submitted}});
             $("body").append(popup_html);
         </script>
     {% endif %}
