@@ -60,13 +60,9 @@
     </div>
 </div>
     {% if gamification_point_submitted %}
-        <script type="text/javascript">
-            console.log("POINT RESPONSE:",gamification_resp);
-            console.log("POINTS SUBMITTED:", gamification_resp.points_submitted);
-            if(gamification_resp.points_submitted){
-                console.log(gamification_resp.popup_html)
-                $('body').append(gamification_resp.popup_html);
-            }
+        <script>
+            let popup_html = "{{gamification_point_html|safe}}";
+            $("body").append(popup_html);
         </script>
     {% endif %}
 {% endblock %}
