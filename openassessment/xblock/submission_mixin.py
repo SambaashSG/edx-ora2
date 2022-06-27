@@ -977,6 +977,17 @@ class SubmissionMixin:
             context["peer_incomplete"] = peer_in_workflow and not workflow["status_details"]["peer"]["complete"]
             context["self_incomplete"] = self_in_workflow and not workflow["status_details"]["self"]["complete"]
             context["student_submission"] = create_submission_dict(student_submission, self.prompts)
+            logger.error("GAMIFICATION POINT ACTION")
+            try:
+                from xmodule.gamification import share_gamification_user_points
+                gamification_resp = share_gamification_user_points(self, check_eligibility=False)
+                logger.error("GAMIFICATION_RESPONSE:", gamification_resp)
+                is_point_submitted = gamification_resp.get("points_submitted")
+                if is_point_submitted:
+                    context["gamification_point_submitted"] = is_point_submitted
+                    context["gamification_point_html"] = gamification_resp.get("popup_html")
+            except Exception as e:
+                logger.error(f"GAMIFICATION ERROR: {e}")
             path = 'openassessmentblock/response/oa_response_submitted.html'
 
         return path, context

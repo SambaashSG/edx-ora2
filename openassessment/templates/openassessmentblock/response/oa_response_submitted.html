@@ -58,5 +58,13 @@
             </article>
         </div>
     </div>
+    {% if gamification_point_submitted %}
+    <script>
+            let popup_html = "{{gamification_point_html|safe}}";
+            console.log("POINTS SUBMITTED:", {{gamification_point_submitted}});
+            $("body").append(popup_html);
+            $("#dialog").dialog();
+    </script>
+    {% endif %}
 </div>
 {% endblock %}
