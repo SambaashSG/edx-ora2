@@ -15,7 +15,19 @@ from .backends.base import Settings
 from .backends.filesystem import is_download_url_available, is_upload_url_available
 
 
+from openedx.core.lib.api.authentication import BearerAuthenticationAllowInactiveUser
+from edx_rest_framework_extensions.auth.jwt.authentication import JwtAuthentication
+from edx_rest_framework_extensions.auth.session.authentication import SessionAuthenticationAllowInactiveUser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.views.decorators.csrf import csrf_exempt
+
 @require_http_methods(["PUT", "GET"])
+@csrf_exempt
+@authentication_classes((
+    JwtAuthentication, BearerAuthenticationAllowInactiveUser, SessionAuthenticationAllowInactiveUser,
+))
+@permission_classes((IsAuthenticated,))
 def filesystem_storage(request, key):
     """
     Uploading and download files to the local filesystem backend.
