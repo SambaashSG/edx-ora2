@@ -503,6 +503,22 @@ class SubmissionMixin:
         try:
             key = self._get_student_item_key(file_num)
             url = file_upload_api.get_upload_url(key, content_type)
+            filename = data["filename"]
+            from common.djangoapps.student.models import StudentORAResponse
+            submitter_anonymous_user_id = self.xmodule_runtime.anonymous_student_id
+            user = self.get_real_user(submitter_anonymous_user_id)
+            sr_objs = StudentORAResponse.objects.filter(block_id=self.get_xblock_id(), user=user)
+            file_response_obj = {f"filenum_{file_num}": file_num, f"filename_{file_num}": filename}
+            if sr_objs:
+                sr_obj = sr_objs.first()
+                list_obj = sr_obj.ora_file_response.get("file_list")
+                list_obj.append(file_response_obj)
+            else:
+                list_obj = [file_response_obj]
+            sr, created = StudentORAResponse.objects.update_or_create(
+                block_id=self.get_xblock_id(), user=user,
+                defaults={'ora_file_response': {"file_list": list_obj}}
+            )
             return {'success': True, 'url': url}
         except FileUploadError:
             logger.exception("FileUploadError:Error retrieving upload URL for the data: %s.", data)
