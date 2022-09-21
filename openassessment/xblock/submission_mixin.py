@@ -257,6 +257,13 @@ class SubmissionMixin:
                     "openassessmentblock.save_submission",
                     {"saved_response": self.saved_response}
                 )
+                from common.djangoapps.student.models import StudentORAResponse
+                submitter_anonymous_user_id = self.xmodule_runtime.anonymous_student_id
+                user = self.get_real_user(submitter_anonymous_user_id)
+                sr, created = StudentORAResponse.objects.update_or_create(
+                    block_id=self.get_xblock_id(), user=user,
+                    defaults={'ora_response': self.saved_response}
+                )
             except Exception:  # pylint: disable=broad-except
                 return {'success': False, 'msg': self._("This response could not be saved.")}
             else:
