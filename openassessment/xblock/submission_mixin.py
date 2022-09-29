@@ -1024,6 +1024,7 @@ class SubmissionMixin:
                 if is_point_submitted:
                     context["gamification_point_submitted"] = is_point_submitted
                     context["gamification_point_html"] = gamification_resp.get("popup_html")
+                    context["gained_points"] = gamification_resp.get("gained_points")
             except Exception as e:
                 logger.error(f"GAMIFICATION ERROR: {e}")
             path = 'openassessmentblock/response/oa_response_submitted.html'
