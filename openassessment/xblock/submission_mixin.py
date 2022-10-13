@@ -24,6 +24,7 @@ from .data_conversion import (
 from .resolve_dates import DISTANT_FUTURE
 from .user_data import get_user_preferences
 from .validation import validate_submission
+from django.conf import settings
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -1015,18 +1016,27 @@ class SubmissionMixin:
             context["peer_incomplete"] = peer_in_workflow and not workflow["status_details"]["peer"]["complete"]
             context["self_incomplete"] = self_in_workflow and not workflow["status_details"]["self"]["complete"]
             context["student_submission"] = create_submission_dict(student_submission, self.prompts)
-            logger.error("GAMIFICATION POINT ACTION")
-            try:
-                from xmodule.gamification import share_gamification_user_points
-                gamification_resp = share_gamification_user_points(self, check_eligibility=False)
-                logger.error("GAMIFICATION_RESPONSE:", gamification_resp)
-                is_point_submitted = gamification_resp.get("points_submitted")
-                if is_point_submitted:
-                    context["gamification_point_submitted"] = is_point_submitted
-                    context["gamification_point_html"] = gamification_resp.get("popup_html")
-                    context["gained_points"] = gamification_resp.get("gained_points")
-            except Exception as e:
-                logger.error(f"GAMIFICATION ERROR: {e}")
+            gamification_resp = None
+            if settings.FEATURES.get("IS_GAMIFICATION_ENABLED", False):
+                logger.error("GAMIFICATION POINT ACTION")
+                try:
+                    from xmodule.gamification import share_gamification_user_points
+                    gamification_resp = share_gamification_user_points(self, check_eligibility=False)
+                    logger.error("GAMIFICATION_RESPONSE:", gamification_resp)
+                    is_point_submitted = gamification_resp.get("points_submitted")
+                    if is_point_submitted:
+                        context["gamification_point_submitted"] = is_point_submitted
+                        context["gamification_point_html"] = gamification_resp.get("popup_html")
+                        context["gained_points"] = gamification_resp.get("gained_points")
+                except Exception as e:
+                    logger.error(f"GAMIFICATION ERROR: {e}")
+            if settings.FEATURES.get("IS_OC_PUSH_NOTIFICATION_ENABLED", False):
+                from xmodule.oc_push_notification import unit_completion_activity
+                gamification_point = None
+                if gamification_resp and gamification_resp.get("points_submitted"):
+                    gamification_point = gamification_resp.get("gained_points")
+                notification = unit_completion_activity(self, gamification_point=gamification_point, check_eligibility=False)
+                logger.info(f"NOTIFICATION FOR {self.get_parent().display_name}: {notification}")
             path = 'openassessmentblock/response/oa_response_submitted.html'
 
         return path, context
