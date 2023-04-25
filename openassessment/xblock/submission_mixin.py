@@ -25,6 +25,8 @@ from .resolve_dates import DISTANT_FUTURE
 from .user_data import get_user_preferences
 from .validation import validate_submission
 from django.conf import settings
+from openedx_events.learning.signals import STUDENT_PROGRESS_CHANGED
+from openedx_events.learning.data import ProgressUserCourseData
 
 logger = logging.getLogger(__name__)  # pylint: disable=invalid-name
 
@@ -1037,6 +1039,13 @@ class SubmissionMixin:
                     gamification_point = gamification_resp.get("gained_points")
                 notification = unit_completion_activity(self, gamification_point=gamification_point, check_eligibility=False)
                 logger.info(f"NOTIFICATION FOR {self.get_parent().display_name}: {notification}")
+            if settings.FEATURES.get("IS_SNS_STUDENT_PROGRESS_SEND_ENABLED", False):
+                course_id = str(self.course_id)
+                user_id = self.scope_ids.user_id
+                STUDENT_PROGRESS_CHANGED.send_event(progress=ProgressUserCourseData(
+                    user_id=user_id,
+                    course_id=course_id
+                ))
             path = 'openassessmentblock/response/oa_response_submitted.html'
 
         return path, context
